@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.lcyluo'
+group = 'com.github.lcyluo'
 
 android {
     compileSdkVersion 30
@@ -9,7 +9,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.1.0"
         vectorDrawables.useSupportLibrary = true
     }
 
