@@ -198,43 +198,52 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        final boolean isRequestCamera = permissions.length == 1;
+        PermissionUtil.onPermissionResult(this, permissions, grantResults, new PermissionUtil.PermissionCallBack() {
+            @Override
+            public void onSuccess() {
+                if (!isRequestCamera) {
+                    hasPermissions();
+                } else {
+                    // 去拍照
+                    launchCamera(Code.REQUEST_CAMERA);
+                }
+            }
 
-        PermissionUtil.onPermissionResult(this, permissions, grantResults,
-                new PermissionUtil.PermissionCallBack() {
-                    @Override
-                    public void onSuccess() {
-                        hasPermissions();
-                    }
-
-                    @Override
-                    public void onShouldShow() {
-                        tvPermission.setText(R.string.permissions_again_easy_photos);
-                        permissionView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if (PermissionUtil.checkAndRequestPermissionsInActivity(EasyPhotosActivity.this, PermissionUtil.getNeedPermissions())) {
-                                    hasPermissions();
-                                }
+            @Override
+            public void onShouldShow() {
+                if (!isRequestCamera) {
+                    tvPermission.setText(R.string.permissions_again_easy_photos);
+                    permissionView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (PermissionUtil.checkAndRequestPermissionsInActivity(EasyPhotosActivity.this, PermissionUtil.getNeedPermissions())) {
+                                hasPermissions();
                             }
-                        });
+                        }
+                    });
+                } else {
+                    Toast.makeText(EasyPhotosActivity.this, "请先允许使用相机拍摄照片和录制视频", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-                    }
-
-                    @Override
-                    public void onFailed() {
-                        tvPermission.setText(R.string.permissions_die_easy_photos);
-                        permissionView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                SettingsUtils.startMyApplicationDetailsForResult(EasyPhotosActivity.this,
-                                        getPackageName());
-                            }
-                        });
-                    }
-                });
+            @Override
+            public void onFailed() {
+                if (!isRequestCamera) {
+                    tvPermission.setText(R.string.permissions_die_easy_photos);
+                    permissionView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            SettingsUtils.startMyApplicationDetailsForResult(EasyPhotosActivity.this, getPackageName());
+                        }
+                    });
+                } else {
+                    Toast.makeText(EasyPhotosActivity.this, "请在设置中允许使用相机拍摄照片和录制视频", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     /**
@@ -245,19 +254,22 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     private void launchCamera(int requestCode) {
         if (TextUtils.isEmpty(Setting.fileProviderAuthority))
             throw new RuntimeException("AlbumBuilder" + " : 请执行 setFileProviderAuthority()方法");
-        if (!MediaMetadataInfoUtils.isCameraCanUse()) {
-            permissionView.setVisibility(View.VISIBLE);
-            tvPermission.setText(R.string.permissions_die_easy_photos);
-            permissionView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SettingsUtils.startMyApplicationDetailsForResult(EasyPhotosActivity.this,
-                            getPackageName());
-                }
-            });
-            return;
+        if (PermissionUtil.checkAndRequestPermissionsInActivity(this, PermissionUtil.getCameraPermissions())) {
+            if (!MediaMetadataInfoUtils.isCameraCanUse()) {
+                permissionView.setVisibility(View.VISIBLE);
+                tvPermission.setText(R.string.permissions_die_easy_photos);
+                permissionView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SettingsUtils.startMyApplicationDetailsForResult(EasyPhotosActivity.this, getPackageName());
+                    }
+                });
+                return;
+            }
+            toAndroidCamera(requestCode);
+        } else {
+            Toast.makeText(EasyPhotosActivity.this, "请允许使用相机拍摄照片和录制视频", Toast.LENGTH_SHORT).show();
         }
-        toAndroidCamera(requestCode);
     }
 
     private void toAndroidCamera(int requestCode) {

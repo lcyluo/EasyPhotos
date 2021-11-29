@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.1.0"
+        versionCode 111
+        versionName "1.1.1"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -28,11 +28,9 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 }
 
-// 指定编码
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
-// 打包源码
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
@@ -43,7 +41,6 @@ task javadoc(type: Javadoc) {
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     classpath += configurations.compile
 }
-// 制作文档(Javadoc)
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir

@@ -3,14 +3,12 @@ package com.huantansheng.easyphotos.utils.permission;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.PermissionChecker;
 
 import com.huantansheng.easyphotos.constant.Code;
-import com.huantansheng.easyphotos.setting.Setting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,21 +82,11 @@ public class PermissionUtil {
     }
 
     public static String[] getNeedPermissions() {
-        if (Setting.isShowCamera) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                return new String[]{Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE};
-            }
-            return new String[]{Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                return new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE};
-            }
-            return new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        }
+        return new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+    }
+
+    public static String[] getCameraPermissions() {
+        return new String[]{Manifest.permission.CAMERA};
     }
 
 }
