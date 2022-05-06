@@ -26,7 +26,7 @@ import java.util.UUID;
 public class BackgroundCallService extends Service {
     public static final int NOTIFICATION_ONGOING_ID = 20;
     private static final String CHANNEL_ID = "camera_channel";
-    private static final String CHANNEL_NAME = "相机";
+    private static final String CHANNEL_NAME = "相机服务";
     private NotificationManager notificationManager;
 
     @Override
@@ -71,8 +71,9 @@ public class BackgroundCallService extends Service {
 
     public Notification getInCallNotification() {
         Intent intent = new Intent(getApplicationContext(), EasyPhotosActivity.class);
+        int flag = Build.VERSION.SDK_INT > Build.VERSION_CODES.R ? PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT;
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
-                UUID.randomUUID().hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                UUID.randomUUID().hashCode(), intent, flag);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), getInCallChannelId())
                 .setSmallIcon(R.drawable.ic_camera_easy_photos)
                 .setDefaults(NotificationCompat.FLAG_ONGOING_EVENT)
