@@ -4,6 +4,8 @@ import android.hardware.Camera;
 import android.media.MediaMetadataRetriever;
 import android.text.format.DateUtils;
 
+import java.io.IOException;
+
 /**
  * MediaMetadataInfoUtils
  * Create By lishilin On 2019/3/25
@@ -25,7 +27,11 @@ public class MediaMetadataInfoUtils {
         } catch (Exception ignored) {
         } finally {
             if (mmr != null) {
-                mmr.release();
+                try {
+                    mmr.release();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return 0;
@@ -46,7 +52,11 @@ public class MediaMetadataInfoUtils {
         } catch (Exception ignored) {
         } finally {
             if (mmr != null) {
-                mmr.release();
+                try {
+                    mmr.release();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return 0;
