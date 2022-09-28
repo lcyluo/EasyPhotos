@@ -1,6 +1,7 @@
 package com.huantansheng.easyphotos.models.album;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -68,9 +70,17 @@ public class AlbumModel {
 
     public void query(Context context, final CallBack callBack) {
         final Context appCxt = context.getApplicationContext();
-        if (PermissionChecker.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED) {
-            if (null != callBack) callBack.onAlbumWorkedCallBack();
-            return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if ((PermissionChecker.checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES) != PermissionChecker.PERMISSION_GRANTED)
+                    || PermissionChecker.checkSelfPermission(context, Manifest.permission.READ_MEDIA_VIDEO) != PermissionChecker.PERMISSION_GRANTED) {
+                if (null != callBack) callBack.onAlbumWorkedCallBack();
+                return;
+            }
+        } else {
+            if (PermissionChecker.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED) {
+                if (null != callBack) callBack.onAlbumWorkedCallBack();
+                return;
+            }
         }
         canRun = true;
         new Thread(new Runnable() {
@@ -363,6 +373,7 @@ public class AlbumModel {
     }
 
 
+    @SuppressLint("Range")
     public static Photo buildPhotoFromUri(Context context, Uri uri) {
         if (context == null || uri == null) {
             return null;
