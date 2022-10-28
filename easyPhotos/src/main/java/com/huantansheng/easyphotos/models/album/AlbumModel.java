@@ -25,6 +25,7 @@ import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.result.Result;
 import com.huantansheng.easyphotos.setting.Setting;
 import com.huantansheng.easyphotos.utils.String.StringUtils;
+import com.huantansheng.easyphotos.utils.bitmap.BitmapUtils;
 import com.huantansheng.easyphotos.utils.media.MediaMetadataInfoUtils;
 
 import java.io.File;
@@ -411,7 +412,11 @@ public class AlbumModel {
                 } else {
                     width = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns.WIDTH));
                     height = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns.HEIGHT));
-                    orientation = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns.ORIENTATION));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        orientation = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns.ORIENTATION));
+                    } else {
+                        orientation = BitmapUtils.getBitmapDegree(path);
+                    }
                     if (90 == orientation || 270 == orientation) {
                         int temp = width;
                         width = height;

@@ -114,8 +114,7 @@ public class FileUtils {
                 String filepath = file.getAbsolutePath();
 
                 // Construct path without file name.
-                String pathwithoutname = filepath.substring(0,
-                        filepath.length() - filename.length());
+                String pathwithoutname = filepath.substring(0, filepath.length() - filename.length());
                 if (pathwithoutname.endsWith("/")) {
                     pathwithoutname = pathwithoutname.substring(0, pathwithoutname.length() - 1);
                 }
@@ -132,8 +131,7 @@ public class FileUtils {
 
         String extension = getExtension(file.getName());
 
-        if (extension.length() > 0)
-            return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.substring(1));
+        if (extension.length() > 0) return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.substring(1));
 
         return "application/octet-stream";
     }
@@ -207,16 +205,14 @@ public class FileUtils {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
+    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = MediaStore.Files.FileColumns.DATA;
         final String[] projection = {column};
 
         try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs
-                    , null);
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
             if (cursor != null && cursor.moveToFirst()) {
                 if (DEBUG) DatabaseUtils.dumpCursor(cursor);
 
@@ -251,11 +247,7 @@ public class FileUtils {
     private static String getLocalPath(final Context context, final Uri uri) {
 
         if (DEBUG)
-            Log.d(TAG + " File -",
-                    "Authority: " + uri.getAuthority() + ", Fragment: " + uri.getFragment() + ", "
-                            + "Port: " + uri.getPort() + ", Query: " + uri.getQuery() + ", Scheme"
-                            + ": " + uri.getScheme() + ", Host: " + uri.getHost() + ", Segments: "
-                            + uri.getPathSegments().toString());
+            Log.d(TAG + " File -", "Authority: " + uri.getAuthority() + ", Fragment: " + uri.getFragment() + ", " + "Port: " + uri.getPort() + ", Query: " + uri.getQuery() + ", Scheme" + ": " + uri.getScheme() + ", Host: " + uri.getHost() + ", Segments: " + uri.getPathSegments().toString());
 
 
         // DocumentProvider
@@ -286,12 +278,10 @@ public class FileUtils {
                     return id.substring(4);
                 }
 
-                String[] contentUriPrefixesToTry = new String[]{"content://downloads" +
-                        "/public_downloads", "content://downloads/my_downloads"};
+                String[] contentUriPrefixesToTry = new String[]{"content://downloads" + "/public_downloads", "content://downloads/my_downloads"};
 
                 for (String contentUriPrefix : contentUriPrefixesToTry) {
-                    Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix),
-                            Long.valueOf(id));
+                    Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.valueOf(id));
                     try {
                         String path = getDataColumn(context, contentUri, null, null);
                         if (path != null) {
@@ -426,8 +416,7 @@ public class FileUtils {
      */
     public static Intent getViewIntent(Context context, File file) {
         //Uri uri = Uri.fromFile(file);
-        Uri uri = FileProvider.getUriForFile(context,
-                (context.getApplicationContext().getPackageName() + ".fileprovider"), file);
+        Uri uri = FileProvider.getUriForFile(context, (context.getApplicationContext().getPackageName() + ".fileprovider"), file);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         String url = file.toString();
         if (url.contains(".doc") || url.contains(".docx")) {
@@ -636,31 +625,23 @@ public class FileUtils {
     @SuppressWarnings("all")
     public static File createCameraTempFile(Context context) {
         if (context == null) return null;
-        File dir = context.getExternalFilesDir(Setting.isOnlyVideo() ? Environment.DIRECTORY_MOVIES : Environment.DIRECTORY_PICTURES);
-        if (null == dir) {
-            dir = new File(Environment.getExternalStorageDirectory(), File.separator + "DCIM" + File.separator + "Camera" + File.separator);
+        File dir = new File(Environment.getExternalStorageDirectory(), File.separator + "DCIM" + File.separator + "Camera" + File.separator);
+        if (!dir.exists()) {
             dir.mkdirs();
         }
-        if (!dir.isDirectory()) {
-            if (!dir.mkdirs()) {
-                dir = context.getExternalFilesDir(null);
-                if (null == dir || !dir.exists()) {
-                    dir = context.getFilesDir();
-                    if (null == dir || !dir.exists()) {
-                        dir = context.getCacheDir();
-                        if (!dir.exists()) {
-                            dir.mkdirs();
-                        }
-                    }
-                }
-            }
-        }
         try {
-            return Setting.isOnlyVideo() ? File.createTempFile("VID", ".mp4", dir)
-                    : File.createTempFile("IMG", ".jpg", dir);
+            return Setting.isOnlyVideo() ? File.createTempFile("VID", ".mp4", dir) : File.createTempFile("IMG", ".jpg", dir);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            dir = context.getExternalFilesDir(Setting.isOnlyVideo() ? Environment.DIRECTORY_MOVIES : Environment.DIRECTORY_PICTURES);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            try {
+                return Setting.isOnlyVideo() ? File.createTempFile("VID", ".mp4", dir) : File.createTempFile("IMG", ".jpg", dir);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                return null;
+            }
         }
     }
 }

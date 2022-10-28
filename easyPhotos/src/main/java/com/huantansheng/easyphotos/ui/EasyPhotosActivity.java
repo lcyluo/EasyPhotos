@@ -275,7 +275,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     private void toAndroidCamera(int requestCode) {
         Intent cameraIntent = new Intent(Setting.isOnlyVideo() ? MediaStore.ACTION_VIDEO_CAPTURE : MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null || this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 mTempFileUri = UriUtils.createImageUri(EasyPhotosActivity.this);
             } else {
                 mTempImageFile = FileUtils.createCameraTempFile(EasyPhotosActivity.this);
@@ -327,7 +327,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         switch (resultCode) {
             case RESULT_OK:
                 if (Code.REQUEST_CAMERA == requestCode) {
-                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         onCameraResultAction(mTempFileUri);
                         return;
                     }
@@ -388,8 +388,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     }
 
     private void onCameraResult() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss",
-                Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss", Locale.getDefault());
         String imageName = Setting.isOnlyVideo() ? "VID_%s.mp4" : "IMG_%s.jpg";
         String filename = String.format(imageName, dateFormat.format(new Date()));
         File reNameFile = new File(mTempImageFile.getParentFile(), filename);

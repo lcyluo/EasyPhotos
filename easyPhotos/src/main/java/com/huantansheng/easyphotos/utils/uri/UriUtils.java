@@ -162,7 +162,8 @@ public class UriUtils {
                 MediaStore.Files.FileColumns.DATA + "=? ", new String[]{path},
                 null);
         if (cursor != null && cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+            int index = cursor.getColumnIndex(MediaStore.MediaColumns._ID);
+            int id = cursor.getInt(index);
             cursor.close();
             return Uri.withAppendedPath(contentUri, "" + id);
         } else {
@@ -177,16 +178,15 @@ public class UriUtils {
     }
 
     public static Uri getImageContentUri(Context context, String absPath) {
-        Cursor cursor = null;
-        try {
-            cursor = context.getContentResolver().query(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                    , new String[]{MediaStore.Images.Media._ID}
-                    , MediaStore.Images.Media.DATA + "=? "
-                    , new String[]{absPath}, null);
+        try (Cursor cursor = context.getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                , new String[]{MediaStore.Images.Media._ID}
+                , MediaStore.Images.Media.DATA + "=? "
+                , new String[]{absPath}, null)) {
 
             if (cursor != null && cursor.moveToFirst()) {
-                int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+                int index = cursor.getColumnIndex(MediaStore.MediaColumns._ID);
+                int id = cursor.getInt(index);
                 return Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Integer.toString(id));
             } else if (!absPath.isEmpty()) {
                 ContentValues values = new ContentValues();
@@ -196,10 +196,6 @@ public class UriUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
         }
         return null;
     }
@@ -213,7 +209,8 @@ public class UriUtils {
                     , MediaStore.Video.Media.DATA + "=? "
                     , new String[]{absPath}, null);
             if (cursor != null && cursor.moveToFirst()) {
-                int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID));
+                int index = cursor.getColumnIndex(MediaStore.Video.Media._ID);
+                int id = cursor.getInt(index);
                 return Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, Integer.toString(id));
             } else if (!absPath.isEmpty()) {
                 ContentValues values = new ContentValues();
@@ -250,14 +247,14 @@ public class UriUtils {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 //android Q中不再使用DATA字段，而用RELATIVE_PATH代替
                 //RELATIVE_PATH是相对路径不是绝对路径;照片存储的地方为：存储/Pictures
-                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures");
+                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "DCIM/Camera");
             }
             contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/JPEG");
         }
         //执行insert操作，向系统文件夹中添加文件
         //EXTERNAL_CONTENT_URI代表外部存储器，该值不变
-        return context.getContentResolver().insert(Setting.isOnlyVideo() ? MediaStore.Video.Media.getContentUri("external")
-                : MediaStore.Images.Media.getContentUri("external"), contentValues);
+        return context.getContentResolver().insert(Setting.isOnlyVideo() ? MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                : MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
     }
 
 }
