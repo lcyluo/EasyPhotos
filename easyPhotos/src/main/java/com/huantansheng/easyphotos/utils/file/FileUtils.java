@@ -473,10 +473,6 @@ public class FileUtils {
         return intent;
     }
 
-    public static File getDownloadsDir() {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-    }
-
     public static File getDocumentCacheDir(@NonNull Context context) {
         File dir = new File(context.getCacheDir(), DOCUMENTS_DIR);
         if (!dir.exists()) {
@@ -640,10 +636,10 @@ public class FileUtils {
     @SuppressWarnings("all")
     public static File createCameraTempFile(Context context) {
         if (context == null) return null;
-        File dir = Environment.getExternalStoragePublicDirectory(Setting.isOnlyVideo() ? Environment.DIRECTORY_MOVIES : Environment.DIRECTORY_PICTURES);
+        File dir = context.getExternalFilesDir(Setting.isOnlyVideo() ? Environment.DIRECTORY_MOVIES : Environment.DIRECTORY_PICTURES);
         if (null == dir) {
-            dir = new File(Environment.getExternalStorageDirectory(),
-                    File.separator + "DCIM" + File.separator + "Camera" + File.separator);
+            dir = new File(Environment.getExternalStorageDirectory(), File.separator + "DCIM" + File.separator + "Camera" + File.separator);
+            dir.mkdirs();
         }
         if (!dir.isDirectory()) {
             if (!dir.mkdirs()) {
@@ -651,9 +647,7 @@ public class FileUtils {
                 if (null == dir || !dir.exists()) {
                     dir = context.getFilesDir();
                     if (null == dir || !dir.exists()) {
-                        String cacheDirPath =
-                                File.separator + "data" + File.separator + "data" + File.separator + context.getPackageName() + File.separator + "cache" + File.separator;
-                        dir = new File(cacheDirPath);
+                        dir = context.getCacheDir();
                         if (!dir.exists()) {
                             dir.mkdirs();
                         }
