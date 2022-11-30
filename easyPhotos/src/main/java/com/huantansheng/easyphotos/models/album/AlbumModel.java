@@ -6,7 +6,6 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
@@ -24,7 +23,6 @@ import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.result.Result;
 import com.huantansheng.easyphotos.setting.Setting;
 import com.huantansheng.easyphotos.utils.String.StringUtils;
-import com.huantansheng.easyphotos.utils.bitmap.BitmapUtils;
 import com.huantansheng.easyphotos.utils.media.MediaMetadataInfoUtils;
 
 import java.io.File;
@@ -38,6 +36,7 @@ import java.util.List;
  * Modified by Eagle on 2018/08/31.
  * 修改内容：将AlbumModel的实例化与数据查询分开
  */
+@SuppressWarnings("all")
 public class AlbumModel {
     private static final String TAG = "AlbumModel";
     public static AlbumModel instance;
@@ -129,20 +128,19 @@ public class AlbumModel {
         projectionList.add(MediaStore.MediaColumns.DATE_MODIFIED);
         projectionList.add(MediaStore.MediaColumns.MIME_TYPE);
         projectionList.add(MediaStore.MediaColumns.SIZE);
-        if (!Setting.useWidth) {
-            if (Setting.minWidth != 1 && Setting.minHeight != 1) Setting.useWidth = true;
+        if (!Setting.useWidth && (Setting.minWidth != 1 && Setting.minHeight != 1)) {
+            Setting.useWidth = true;
         }
         if (canReadWidth) {
             if (Setting.useWidth) {
                 projectionList.add(MediaStore.MediaColumns.WIDTH);
                 projectionList.add(MediaStore.MediaColumns.HEIGHT);
-                if (!Setting.isOnlyVideo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                if (!Setting.isOnlyVideo()) {
                     projectionList.add(MediaStore.MediaColumns.ORIENTATION);
                 }
             }
         }
-
-        if (Setting.showVideo && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Setting.showVideo) {
             projectionList.add(MediaStore.MediaColumns.DURATION);
         }
         projections = projectionList.toArray(new String[0]);
@@ -168,9 +166,7 @@ public class AlbumModel {
             if (canReadWidth && Setting.useWidth) {
                 WidthCol = cursor.getColumnIndex(MediaStore.MediaColumns.WIDTH);
                 HeightCol = cursor.getColumnIndex(MediaStore.MediaColumns.HEIGHT);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    orientationCol = cursor.getColumnIndex(MediaStore.MediaColumns.ORIENTATION);
-                }
+                orientationCol = cursor.getColumnIndex(MediaStore.MediaColumns.ORIENTATION);
             }
             boolean hasTime = durationCol > 0;
 
@@ -204,8 +200,6 @@ public class AlbumModel {
                 } else {
                     if (orientationCol != -1) {
                         orientation = cursor.getInt(orientationCol);
-                    } else {
-                        orientation = BitmapUtils.getBitmapDegree(path);
                     }
                     if (!Setting.showGif) {
                         if (path.endsWith(Type.GIF) || type.endsWith(Type.GIF)) {
@@ -217,19 +211,6 @@ public class AlbumModel {
                             width = cursor.getInt(WidthCol);
                             height = cursor.getInt(HeightCol);
                         }
-                        if (width == 0 || height == 0) {
-                            BitmapFactory.Options options = new BitmapFactory.Options();
-                            options.inJustDecodeBounds = true;
-                            BitmapFactory.decodeFile(path, options);
-                            width = options.outWidth;
-                            height = options.outHeight;
-                        }
-                        if (orientation == 90 || orientation == 270) {
-                            int temp = width;
-                            width = height;
-                            height = temp;
-                        }
-
                         if (width < Setting.minWidth || height < Setting.minHeight) {
                             continue;
                         }
@@ -384,20 +365,6 @@ public class AlbumModel {
                     height = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns.HEIGHT));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         orientation = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns.ORIENTATION));
-                    } else {
-                        orientation = BitmapUtils.getBitmapDegree(path);
-                    }
-                    if (width == 0 && height == 0) {
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inJustDecodeBounds = true;
-                        BitmapFactory.decodeFile(path, options);
-                        width = options.outWidth;
-                        height = options.outHeight;
-                    }
-                    if (90 == orientation || 270 == orientation) {
-                        int temp = width;
-                        width = height;
-                        height = temp;
                     }
                 }
             }

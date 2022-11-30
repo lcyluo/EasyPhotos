@@ -1,13 +1,13 @@
 package com.huantansheng.easyphotos.result;
 
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 
 import com.huantansheng.easyphotos.constant.Type;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.setting.Setting;
+import com.huantansheng.easyphotos.utils.bitmap.BitmapUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -86,17 +86,16 @@ public class Result {
     }
 
     public static void processOriginal() {
-        boolean isIceApi = Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1;
         if (Setting.showOriginalMenu) {
             if (Setting.originalMenuUsable) {
                 for (Photo photo : photos) {
                     photo.selectedOriginal = Setting.selectedOriginal;
-                    if (isIceApi && photo.width == 0) {
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inJustDecodeBounds = true;
-                        BitmapFactory.decodeFile(photo.path, options);
-                        photo.width = options.outWidth;
-                        photo.height = options.outHeight;
+                    if (photo.width == 0) {
+                        try {
+                            BitmapUtils.calculateLocalImageSizeThroughBitmapOptions(photo);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

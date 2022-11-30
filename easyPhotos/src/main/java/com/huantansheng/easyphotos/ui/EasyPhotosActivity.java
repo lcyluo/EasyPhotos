@@ -398,8 +398,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             }
         }
         //  将File类型转换为Uri类型,统一通过onCameraResultAction处理返回结果
-        Uri photoUri = Setting.isOnlyVideo() ? UriUtils.getVideoContentUri(this, mTempImageFile.getAbsolutePath())
-                : UriUtils.getImageContentUri(this, mTempImageFile.getAbsolutePath());
+        Uri photoUri = Setting.isOnlyVideo() ? UriUtils.getVideoContentUri(this, mTempImageFile.getAbsolutePath()) : UriUtils.getImageContentUri(this, mTempImageFile.getAbsolutePath());
         //  处理返回结果
         onCameraResultAction(photoUri);
     }
@@ -495,8 +494,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     private void initView() {
 
         if (albumModel.getAlbumItems().isEmpty()) {
-            Toast.makeText(getApplicationContext(), Setting.isOnlyVideo() ? R.string.no_videos_easy_photos
-                    : R.string.no_photos_easy_photos, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), Setting.isOnlyVideo() ? R.string.no_videos_easy_photos : R.string.no_photos_easy_photos, Toast.LENGTH_LONG).show();
             if (Setting.isShowCamera) launchCamera(Code.REQUEST_CAMERA);
             else finish();
             return;
@@ -669,7 +667,8 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
                         if (photo.width == 0 || photo.height == 0) {
                             BitmapUtils.calculateLocalImageSizeThroughBitmapOptions(photo);
                         }
-                        if (BitmapUtils.needChangeWidthAndHeight(photo)) {
+                        photo.orientation = BitmapUtils.getBitmapDegree(photo.path);
+                        if (photo.orientation == 90 || photo.orientation == 270) {
                             int h = photo.width;
                             photo.width = photo.height;
                             photo.height = h;
@@ -706,11 +705,9 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             tvOriginal.setTextColor(ContextCompat.getColor(this, R.color.easy_photos_fg_accent));
         } else {
             if (Setting.originalMenuUsable) {
-                tvOriginal.setTextColor(ContextCompat.getColor(this,
-                        R.color.easy_photos_fg_primary));
+                tvOriginal.setTextColor(ContextCompat.getColor(this, R.color.easy_photos_fg_primary));
             } else {
-                tvOriginal.setTextColor(ContextCompat.getColor(this,
-                        R.color.easy_photos_fg_primary_dark));
+                tvOriginal.setTextColor(ContextCompat.getColor(this, R.color.easy_photos_fg_primary_dark));
             }
         }
     }
@@ -734,8 +731,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     }
 
     private void newShowAnim() {
-        ObjectAnimator translationShow = ObjectAnimator.ofFloat(rvAlbumItems, "translationY",
-                mBottomBar.getTop(), 0);
+        ObjectAnimator translationShow = ObjectAnimator.ofFloat(rvAlbumItems, "translationY", mBottomBar.getTop(), 0);
         ObjectAnimator alphaShow = ObjectAnimator.ofFloat(rootViewAlbumItems, "alpha", 0.0f, 1.0f);
         translationShow.setDuration(300);
         setShow = new AnimatorSet();
@@ -744,8 +740,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     }
 
     private void newHideAnim() {
-        ObjectAnimator translationHide = ObjectAnimator.ofFloat(rvAlbumItems, "translationY", 0,
-                mBottomBar.getTop());
+        ObjectAnimator translationHide = ObjectAnimator.ofFloat(rvAlbumItems, "translationY", 0, mBottomBar.getTop());
         ObjectAnimator alphaHide = ObjectAnimator.ofFloat(rootViewAlbumItems, "alpha", 1.0f, 0.0f);
         translationHide.setDuration(200);
         setHide = new AnimatorSet();
@@ -801,8 +796,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             tvDone.setVisibility(View.VISIBLE);
             tvPreview.setVisibility(View.VISIBLE);
         }
-        tvDone.setText(getString(R.string.selector_action_done_easy_photos, Result.count(),
-                Setting.count));
+        tvDone.setText(getString(R.string.selector_action_done_easy_photos, Result.count(), Setting.count));
     }
 
     @Override
@@ -829,12 +823,10 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         }
         switch (result) {
             case Result.PICTURE_OUT:
-                Toast.makeText(this, getString(R.string.selector_reach_max_image_hint_easy_photos
-                        , Setting.complexPictureCount), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.selector_reach_max_image_hint_easy_photos, Setting.complexPictureCount), Toast.LENGTH_SHORT).show();
                 break;
             case Result.VIDEO_OUT:
-                Toast.makeText(this, getString(R.string.selector_reach_max_video_hint_easy_photos
-                        , Setting.complexVideoCount), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.selector_reach_max_video_hint_easy_photos, Setting.complexVideoCount), Toast.LENGTH_SHORT).show();
                 break;
             case Result.SINGLE_TYPE:
                 Toast.makeText(this, getString(R.string.selector_single_type_hint_easy_photos), Toast.LENGTH_SHORT).show();
