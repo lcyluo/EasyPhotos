@@ -142,7 +142,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             return;
         }
         initSomeViews();
-        if (PermissionUtil.checkAndRequestPermissionsInActivity(this, PermissionUtil.getNeedPermissions())) {
+        if (PermissionUtil.checkAndRequestPermissionsInActivity(this, PermissionUtil.getNeedPermissions(this))) {
             hasPermissions();
         } else {
             permissionView.setVisibility(View.VISIBLE);
@@ -219,7 +219,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
                     permissionView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if (PermissionUtil.checkAndRequestPermissionsInActivity(EasyPhotosActivity.this, PermissionUtil.getNeedPermissions())) {
+                            if (PermissionUtil.checkAndRequestPermissionsInActivity(EasyPhotosActivity.this, PermissionUtil.getNeedPermissions(EasyPhotosActivity.this))) {
                                 hasPermissions();
                             }
                         }
@@ -317,7 +317,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Code.REQUEST_SETTING_APP_DETAILS) {
-            if (PermissionUtil.checkAndRequestPermissionsInActivity(this, PermissionUtil.getNeedPermissions())) {
+            if (PermissionUtil.checkAndRequestPermissionsInActivity(this, PermissionUtil.getNeedPermissions(this))) {
                 hasPermissions();
             } else {
                 permissionView.setVisibility(View.VISIBLE);

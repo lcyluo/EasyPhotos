@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.PermissionChecker;
 
 import com.huantansheng.easyphotos.constant.Code;
+import com.huantansheng.easyphotos.setting.Setting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,11 +83,17 @@ public class PermissionUtil {
         listener.onFailed();
     }
 
-    public static String[] getNeedPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    public static String[] getNeedPermissions(Activity cxt) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && cxt.getApplicationInfo().targetSdkVersion >= Build.VERSION_CODES.TIRAMISU) {
+            if (Setting.isOnlyImage()) {
+                return new String[]{Manifest.permission.READ_MEDIA_IMAGES};
+            }
+            if (Setting.isOnlyVideo()) {
+                return new String[]{Manifest.permission.READ_MEDIA_VIDEO};
+            }
             return new String[]{Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO};
         }
-        return new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+        return new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
     }
 
     public static String[] getCameraPermissions() {

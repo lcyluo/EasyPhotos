@@ -62,16 +62,12 @@ import java.util.Locale;
  * Created by huan on 2017/12/4.
  */
 
-public class PuzzleActivity extends AppCompatActivity implements View.OnClickListener,
-        PuzzleAdapter.OnItemClickListener, TextStickerAdapter.OnItemClickListener {
+public class PuzzleActivity extends AppCompatActivity implements View.OnClickListener, PuzzleAdapter.OnItemClickListener, TextStickerAdapter.OnItemClickListener {
 
     private static WeakReference<Class<? extends Activity>> toClass;
 
 
-    public static void startWithPhotos(Activity act, ArrayList<Photo> photos,
-                                       String puzzleSaveDirPath, String puzzleSaveNamePrefix,
-                                       int requestCode, boolean replaceCustom,
-                                       @NonNull ImageEngine imageEngine) {
+    public static void startWithPhotos(Activity act, ArrayList<Photo> photos, String puzzleSaveDirPath, String puzzleSaveNamePrefix, int requestCode, boolean replaceCustom, @NonNull ImageEngine imageEngine) {
         if (null != toClass) {
             toClass.clear();
             toClass = null;
@@ -90,10 +86,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         act.startActivityForResult(intent, requestCode);
     }
 
-    public static void startWithPhotos(Fragment fragment, ArrayList<Photo> photos,
-                                       String puzzleSaveDirPath, String puzzleSaveNamePrefix,
-                                       int requestCode, boolean replaceCustom,
-                                       @NonNull ImageEngine imageEngine) {
+    public static void startWithPhotos(Fragment fragment, ArrayList<Photo> photos, String puzzleSaveDirPath, String puzzleSaveNamePrefix, int requestCode, boolean replaceCustom, @NonNull ImageEngine imageEngine) {
         if (null != toClass) {
             toClass.clear();
             toClass = null;
@@ -107,16 +100,12 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         intent.putExtra(Key.PUZZLE_SAVE_DIR, puzzleSaveDirPath);
         intent.putExtra(Key.PUZZLE_SAVE_NAME_PREFIX, puzzleSaveNamePrefix);
         if (replaceCustom) {
-            toClass =
-                    new WeakReference<Class<? extends Activity>>(fragment.getActivity().getClass());
+            toClass = new WeakReference<Class<? extends Activity>>(fragment.getActivity().getClass());
         }
         fragment.startActivityForResult(intent, requestCode);
     }
 
-    public static void startWithPhotos(androidx.fragment.app.Fragment fragmentV,
-                                       ArrayList<Photo> photos, String puzzleSaveDirPath,
-                                       String puzzleSaveNamePrefix, int requestCode,
-                                       boolean replaceCustom, @NonNull ImageEngine imageEngine) {
+    public static void startWithPhotos(androidx.fragment.app.Fragment fragmentV, ArrayList<Photo> photos, String puzzleSaveDirPath, String puzzleSaveNamePrefix, int requestCode, boolean replaceCustom, @NonNull ImageEngine imageEngine) {
         if (null != toClass) {
             toClass.clear();
             toClass = null;
@@ -131,8 +120,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         intent.putExtra(Key.PUZZLE_SAVE_NAME_PREFIX, puzzleSaveNamePrefix);
         if (replaceCustom) {
             if (fragmentV.getActivity() != null) {
-                toClass =
-                        new WeakReference<Class<? extends Activity>>(fragmentV.getActivity().getClass());
+                toClass = new WeakReference<Class<? extends Activity>>(fragmentV.getActivity().getClass());
             }
         }
         fragmentV.startActivityForResult(intent, requestCode);
@@ -256,8 +244,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         rvPuzzleTemplet = (RecyclerView) findViewById(R.id.rv_puzzle_template);
         puzzleAdapter = new PuzzleAdapter();
         puzzleAdapter.setOnItemClickListener(this);
-        rvPuzzleTemplet.setLayoutManager(new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false));
+        rvPuzzleTemplet.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rvPuzzleTemplet.setAdapter(puzzleAdapter);
         puzzleAdapter.refreshData(PuzzleUtils.getPuzzleLayouts(fileCount));
 
@@ -408,8 +395,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
             toggleIvMenu(R.id.iv_padding);
         } else if (R.id.tv_template == id) {
             tvTemplate.setTextColor(ContextCompat.getColor(this, R.color.easy_photos_fg_accent));
-            tvTextSticker.setTextColor(ContextCompat.getColor(this,
-                    R.color.easy_photos_fg_primary));
+            tvTextSticker.setTextColor(ContextCompat.getColor(this, R.color.easy_photos_fg_primary));
 
             rvPuzzleTemplet.setAdapter(puzzleAdapter);
 
@@ -451,36 +437,31 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         puzzleView.clearHandling();
         puzzleView.invalidate();
 
-        stickerModel.save(this, mRootView, puzzleView, puzzleView.getWidth(),
-                puzzleView.getHeight(), saveDirPath, saveNamePrefix, true,
-                new SaveBitmapCallBack() {
-                    @Override
-                    public void onSuccess(File file) {
-                        Intent intent = new Intent();
+        stickerModel.save(this, mRootView, puzzleView, puzzleView.getWidth(), puzzleView.getHeight(), saveDirPath, saveNamePrefix, true, new SaveBitmapCallBack() {
+            @Override
+            public void onSuccess(File file) {
+                Intent intent = new Intent();
 
-                        Photo photo = new Photo(file.getName(), UriUtils.getUri(PuzzleActivity.this,
-                                file), file.getAbsolutePath(), file.lastModified() / 1000,
-                                puzzleView.getWidth(), puzzleView.getHeight(), 0, file.length(),
-                                MediaMetadataInfoUtils.getDuration(file.getAbsolutePath()), "image/png");
-                        intent.putExtra(EasyPhotos.RESULT_PHOTOS, photo);
-                        setResult(RESULT_OK, intent);
-                        PuzzleActivity.this.finish();
-                    }
+                Photo photo = new Photo(file.getName(), UriUtils.getUri(PuzzleActivity.this, file), file.getAbsolutePath(), file.lastModified() / 1000, puzzleView.getWidth(), puzzleView.getHeight(), 0, file.length(), MediaMetadataInfoUtils.getDuration(file.getAbsolutePath()), "image/png");
+                intent.putExtra(EasyPhotos.RESULT_PHOTOS, photo);
+                setResult(RESULT_OK, intent);
+                PuzzleActivity.this.finish();
+            }
 
-                    @Override
-                    public void onIOFailed(IOException exception) {
-                        exception.printStackTrace();
-                        setResult(RESULT_OK);
-                        PuzzleActivity.this.finish();
-                    }
+            @Override
+            public void onIOFailed(IOException exception) {
+                exception.printStackTrace();
+                setResult(RESULT_OK);
+                PuzzleActivity.this.finish();
+            }
 
-                    @Override
-                    public void onCreateDirFailed() {
-                        setResult(RESULT_OK);
-                        PuzzleActivity.this.finish();
-                    }
+            @Override
+            public void onCreateDirFailed() {
+                setResult(RESULT_OK);
+                PuzzleActivity.this.finish();
+            }
 
-                });
+        });
     }
 
     private void toggleIvMenu(@IdRes int resId) {
@@ -533,91 +514,77 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
             }
             return;
         }
-        switch (resultCode) {
-            case RESULT_OK:
-                if (degreeIndex != -1) {
-                    degrees.remove(degreeIndex);
-                    degrees.add(degreeIndex, 0);
+        if (resultCode == RESULT_OK) {
+            if (degreeIndex != -1) {
+                degrees.remove(degreeIndex);
+                degrees.add(degreeIndex, 0);
+            }
+
+            String tempPath = "";
+            Uri tempUri = null;
+
+            ArrayList<Photo> photos = data.getParcelableArrayListExtra(EasyPhotos.RESULT_PHOTOS);
+            Photo photo = photos.get(0);
+            tempPath = photo.path;
+            tempUri = photo.uri;
+
+
+            final String path = tempPath;
+            final Uri uri = tempUri;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final Bitmap bitmap = getScaleBitmap(path, uri);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            puzzleView.replace(bitmap);
+                        }
+                    });
                 }
-
-                String tempPath = "";
-                Uri tempUri = null;
-
-                ArrayList<Photo> photos =
-                        data.getParcelableArrayListExtra(EasyPhotos.RESULT_PHOTOS);
-                Photo photo = photos.get(0);
-                tempPath = photo.path;
-                tempUri = photo.uri;
-
-
-                final String path = tempPath;
-                final Uri uri = tempUri;
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        final Bitmap bitmap = getScaleBitmap(path, uri);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                puzzleView.replace(bitmap);
-                            }
-                        });
-                    }
-                }).start();
-
-                break;
-            case RESULT_CANCELED:
-                break;
-            default:
-                break;
+            }).start();
         }
     }
 
     protected String[] getNeedPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && getApplicationInfo().targetSdkVersion >= Build.VERSION_CODES.TIRAMISU) {
+            return new String[]{Manifest.permission.READ_MEDIA_IMAGES};
         }
-        return new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+        return new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
     }
 
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionUtil.onPermissionResult(this, permissions, grantResults,
-                new PermissionUtil.PermissionCallBack() {
-                    @Override
-                    public void onSuccess() {
-                        savePhoto();
-                    }
+        PermissionUtil.onPermissionResult(this, permissions, grantResults, new PermissionUtil.PermissionCallBack() {
+            @Override
+            public void onSuccess() {
+                savePhoto();
+            }
 
+            @Override
+            public void onShouldShow() {
+                Snackbar.make(rvPuzzleTemplet, R.string.permissions_again_easy_photos, Snackbar.LENGTH_INDEFINITE).setAction("go", new View.OnClickListener() {
                     @Override
-                    public void onShouldShow() {
-                        Snackbar.make(rvPuzzleTemplet, R.string.permissions_again_easy_photos,
-                                Snackbar.LENGTH_INDEFINITE).setAction("go",
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        if (PermissionUtil.checkAndRequestPermissionsInActivity(PuzzleActivity.this, getNeedPermissions())) {
-                                            savePhoto();
-                                        }
-                                    }
-                                }).show();
+                    public void onClick(View view) {
+                        if (PermissionUtil.checkAndRequestPermissionsInActivity(PuzzleActivity.this, getNeedPermissions())) {
+                            savePhoto();
+                        }
                     }
+                }).show();
+            }
 
+            @Override
+            public void onFailed() {
+                Snackbar.make(rvPuzzleTemplet, R.string.permissions_die_easy_photos, Snackbar.LENGTH_INDEFINITE).setAction("go", new View.OnClickListener() {
                     @Override
-                    public void onFailed() {
-                        Snackbar.make(rvPuzzleTemplet, R.string.permissions_die_easy_photos,
-                                Snackbar.LENGTH_INDEFINITE).setAction("go",
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        SettingsUtils.startMyApplicationDetailsForResult(PuzzleActivity.this,
-                                                getPackageName());
-                                    }
-                                }).show();
+                    public void onClick(View view) {
+                        SettingsUtils.startMyApplicationDetailsForResult(PuzzleActivity.this, getPackageName());
                     }
-                });
+                }).show();
+            }
+        });
     }
 
     @Override
