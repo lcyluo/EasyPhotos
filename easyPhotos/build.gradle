@@ -3,13 +3,13 @@ apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.lcyluo'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 33
+        minSdkVersion 23
+        targetSdkVersion 34
         versionCode 119
-        versionName "1.2.0"
+        versionName "1.2.1"
         vectorDrawables.useSupportLibrary = true
     }
 

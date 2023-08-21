@@ -45,7 +45,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/EasyPhotosTheme" />
         <!--防止拍照被回收-->
-        <service android:name=".utils.BackgroundCallService" />
+        <service
+            android:name=".utils.BackgroundCallService"
+            android:foregroundServiceType="camera" />
     </application>
 
 </manifest>
