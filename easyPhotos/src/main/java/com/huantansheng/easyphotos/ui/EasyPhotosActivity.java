@@ -1,5 +1,6 @@
 package com.huantansheng.easyphotos.ui;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -141,6 +142,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             finish();
             return;
         }
+        albumModel = AlbumModel.getInstance();
         initSomeViews();
         if (PermissionUtil.checkAndRequestPermissionsInActivity(this, PermissionUtil.getNeedPermissions(this))) {
             hasPermissions();
@@ -193,14 +195,13 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             }
         };
         loadingDialog.show();
-        albumModel = AlbumModel.getInstance();
         albumModel.query(this, albumModelCallBack);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        final boolean isRequestCamera = permissions.length == 1;
+        final boolean isRequestCamera = permissions.length == 1 && Manifest.permission.CAMERA.equals(permissions[0]);
         PermissionUtil.onPermissionResult(this, permissions, grantResults, new PermissionUtil.PermissionCallBack() {
             @Override
             public void onSuccess() {
