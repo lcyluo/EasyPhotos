@@ -84,7 +84,7 @@ public class PermissionUtil {
     }
 
     public static String[] getNeedPermissions(Activity cxt) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && cxt.getApplicationInfo().targetSdkVersion >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (Setting.isOnlyImage()) {
                 return new String[]{Manifest.permission.READ_MEDIA_IMAGES};
             }

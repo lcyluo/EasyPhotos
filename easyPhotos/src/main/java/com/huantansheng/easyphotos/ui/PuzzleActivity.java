@@ -547,7 +547,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     protected String[] getNeedPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && getApplicationInfo().targetSdkVersion >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             return new String[]{Manifest.permission.READ_MEDIA_IMAGES};
         }
         return new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};

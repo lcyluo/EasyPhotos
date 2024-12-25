@@ -68,7 +68,7 @@ public class AlbumModel {
 
     public void query(Context context, final CallBack callBack) {
         final Context appCxt = context.getApplicationContext();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && appCxt.getApplicationInfo().targetSdkVersion >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if ((Setting.isOnlyImage() && PermissionChecker.checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES) != PermissionChecker.PERMISSION_GRANTED)
                     || (Setting.isOnlyVideo() && PermissionChecker.checkSelfPermission(context, Manifest.permission.READ_MEDIA_VIDEO) != PermissionChecker.PERMISSION_GRANTED)) {
                 if (null != callBack) callBack.onAlbumWorkedCallBack();
