@@ -20,6 +20,18 @@ android {
     namespace 'com.huantansheng.easyphotos'
 }
 
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = 'com.github.lcyluo' //groupId 随便取
+                artifactId = 'EasyPhotos'  //test随便取
+                version = '1.2.4'
+            }
+        }
+    }
+}
+
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     //noinspection GradleDependency
