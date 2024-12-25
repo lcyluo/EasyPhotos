@@ -66,7 +66,7 @@ allprojects {
 ```gradle
 dependencies {  
 
-        implementation 'com.github.lcyluo:EasyPhotos:1.1.7'
+        implementation 'com.github.lcyluo:EasyPhotos:1.2.4.6'
       
   
 }
@@ -113,9 +113,9 @@ dependencies {
 
 
 ## 更新日志 
-**1.1.9：
+**1.2.4.6：
 
--   修复部分机型加载相册时间过久的BUG；
+-    适配 Android14 版本；
   
   
   

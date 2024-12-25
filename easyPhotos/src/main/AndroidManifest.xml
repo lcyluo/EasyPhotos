@@ -53,8 +53,7 @@
         <service
             android:name=".utils.BackgroundCallService"
             android:exported="false"
-            android:foregroundServiceType="camera"
-            tools:replace="android:exported" />
+            android:foregroundServiceType="camera" />
     </application>
 
 </manifest>
