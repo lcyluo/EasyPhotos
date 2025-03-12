@@ -66,7 +66,7 @@ allprojects {
 ```gradle
 dependencies {  
 
-        implementation 'com.github.lcyluo:EasyPhotos:1.2.4.6'
+        implementation 'com.github.lcyluo:EasyPhotos:1.2.5'
       
   
 }
