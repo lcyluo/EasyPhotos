@@ -45,7 +45,7 @@
 - 自带媒体库相关方法（如媒体文件更新到媒体库）    
 
 ## 关于EasyPhotos的SDK及相关版本公示（androidx版本） 
-compileSdkVersion 33  
+compileSdkVersion 34  
 minSdkVersion 19  
 targetSdkVersion 33
 
@@ -113,7 +113,7 @@ dependencies {
 
 
 ## 更新日志 
-**1.2.4.6：
+**1.2.5：
 
 -    适配 Android14 版本；
   
