@@ -8,8 +8,8 @@ android {
         minSdkVersion 23
         //noinspection OldTargetApi
         targetSdkVersion 33
-        versionCode 124
-        versionName "1.2.4"
+        versionCode 125
+        versionName "1.2.5"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -18,18 +18,6 @@ android {
     }
 
     namespace 'com.huantansheng.easyphotos'
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                groupId = 'com.github.lcyluo' //groupId 随便取
-                artifactId = 'EasyPhotos'  //test随便取
-                version = '1.2.4'
-            }
-        }
-    }
 }
 
 dependencies {
@@ -44,4 +32,40 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+}
+
+// 增加上传源码的task
+tasks.register('sourceJar', Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier = "sources"
+}
+
+publishing {
+    publications {
+        aarAndroid(MavenPublication) {
+            groupId = 'com.github.lcyluo'
+            artifactId = 'EasyPhotos'
+            version = '1.2.5'
+            // 增加上传源码的 task
+            artifact sourceJar
+            // 必须有这个 否则不会上传AAR包
+            afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
+
+            // pom文件中声明依赖，从而传递到使用方
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                configurations.implementation.allDependencies.each {
+                    // 避免出现空节点或 artifactId=unspecified 的节点
+                    if (it.group != null && (it.name != null && "unspecified" != it.name) && it.version != null) {
+                        println "dependency=${it.toString()}"
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                        dependencyNode.appendNode('scope', 'implementation')
+                    }
+                }
+            }
+        }
+    }
 }
