@@ -209,6 +209,16 @@ public class AlbumBuilder {
     }
 
     /**
+     * 相机权限提示
+     *
+     * @param permissionHint 相机权限提示
+     */
+    public AlbumBuilder setCameraPermissionHint(String permissionHint) {
+        Setting.cameraPermissionHint = permissionHint;
+        return AlbumBuilder.this;
+    }
+
+    /**
      * 设置选择数
      *
      * @param selectorMaxCount 最大选择数

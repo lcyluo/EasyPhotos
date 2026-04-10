@@ -6,6 +6,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
@@ -36,6 +37,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -113,6 +115,10 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     private Uri mTempFileUri = null;
 
     private ServiceConnection xyCallConnection;
+    /**
+     * 弹窗
+     */
+    private AlertDialog dialog = null;
 
     public static void start(Activity activity, int requestCode) {
         Intent intent = new Intent(activity, EasyPhotosActivity.class);
@@ -255,6 +261,23 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     private void launchCamera(int requestCode) {
         if (TextUtils.isEmpty(Setting.fileProviderAuthority))
             throw new RuntimeException("AlbumBuilder" + " : 请执行 setFileProviderAuthority()方法");
+        boolean noCameraPermission = PermissionChecker.checkSelfPermission(this, Manifest.permission.CAMERA) != PermissionChecker.PERMISSION_GRANTED;
+        if (noCameraPermission && !TextUtils.isEmpty(Setting.cameraPermissionHint)) {
+            // 进行权限提示框,提示用户
+            dialog = new AlertDialog.Builder(this)
+                    .setTitle("权限请求")
+                    .setMessage(Setting.cameraPermissionHint)
+                    .setPositiveButton("确认", (d, which) -> {
+                        launchCameraWithPermissionRequest(requestCode);
+                    })
+                    .setNegativeButton("取消", (d, which) -> d.dismiss())
+                    .show();
+        } else {
+            launchCameraWithPermissionRequest(requestCode);
+        }
+    }
+
+    private void launchCameraWithPermissionRequest(int requestCode) {
         if (PermissionUtil.checkAndRequestPermissionsInActivity(this, PermissionUtil.getCameraPermissions())) {
             if (!MediaMetadataInfoUtils.isCameraCanUse()) {
                 permissionView.setVisibility(View.VISIBLE);
@@ -868,6 +891,11 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     protected void onDestroy() {
         if (albumModel != null) albumModel.stopQuery();
         stopForegroundService();
+        Setting.cameraPermissionHint = "";
+        if (dialog != null) {
+            dialog.dismiss();
+            dialog = null;
+        }
         super.onDestroy();
     }
 

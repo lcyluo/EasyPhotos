@@ -58,6 +58,7 @@ public class Setting {
     public static boolean complexSingleType = false;
     public static int complexVideoCount = 0;
     public static int complexPictureCount = 0;
+    public static String cameraPermissionHint = "";
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef(value = {LIST_FIRST, BOTTOM_RIGHT})
@@ -95,6 +96,7 @@ public class Setting {
         complexSingleType = false;
         complexVideoCount = 0;
         complexPictureCount = 0;
+        cameraPermissionHint = "";
         videoRecordLimitTime = 0;
         cameraFacing = -1;
     }

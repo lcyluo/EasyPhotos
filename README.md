@@ -66,7 +66,7 @@ allprojects {
 ```gradle
 dependencies {  
 
-        implementation 'com.github.lcyluo:EasyPhotos:1.2.5'
+        implementation 'com.github.lcyluo:EasyPhotos:1.2.6'
       
   
 }
@@ -113,9 +113,9 @@ dependencies {
 
 
 ## 更新日志 
-**1.2.5：
+**1.2.6：
 
--    适配 Android14 版本；
+-     增加相册中点击相机时的权限请求弹窗；
   
   
   

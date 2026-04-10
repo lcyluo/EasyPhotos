@@ -167,6 +167,7 @@ public class SampleActivity extends AppCompatActivity
             case R.id.camera://单独使用相机
 
                 EasyPhotos.createCamera(this, true)
+                        .setCameraPermissionHint("相机(CAMERA)，用于拍摄照片后存储到系统相册中")
                         .setFileProviderAuthority("com.huantansheng.easyphotos.demo.fileprovider")
                         .start(101);
 
@@ -189,6 +190,7 @@ public class SampleActivity extends AppCompatActivity
             case R.id.album_camera_single://相册单选，有相机功能
 
                 EasyPhotos.createAlbum(this, true, false, GlideEngine.getInstance())
+                        .setCameraPermissionHint("相机(CAMERA)，用于拍摄照片后存储到系统相册中")
                         .setFileProviderAuthority("com.huantansheng.easyphotos.demo.fileprovider")
                         .start(101);
                 break;
@@ -196,8 +198,9 @@ public class SampleActivity extends AppCompatActivity
             case R.id.album_camera_multi://相册多选，有相机功能
 
                 EasyPhotos.createAlbum(this, true, false, GlideEngine.getInstance())
+                        .setCameraPermissionHint("相机(CAMERA)，用于拍摄照片后存储到系统相册中")
                         .setFileProviderAuthority("com.huantansheng.easyphotos.demo.fileprovider")
-                        .setCount(22)
+                        .setCount(6)
                         .start(new SelectCallback() {
                             @Override
                             public void onResult(ArrayList<Photo> photos, boolean isOriginal) {
@@ -217,6 +220,7 @@ public class SampleActivity extends AppCompatActivity
             case R.id.album_camera_multi_use_width:// 正确的宽高数据，链式调用写法
 
                 EasyPhotos.createAlbum(this, true, true, GlideEngine.getInstance())
+                        .setCameraPermissionHint("相机(CAMERA)，用于拍摄照片后存储到系统相册中")
                         .setFileProviderAuthority("com.huantansheng.easyphotos.demo.fileprovider")
                         .setCount(22)
                         .start(new SelectCallback() {
@@ -237,6 +241,7 @@ public class SampleActivity extends AppCompatActivity
 
             case R.id.album_complex_selector1:
                 EasyPhotos.createAlbum(this, false, false, GlideEngine.getInstance())
+                        .setCameraPermissionHint("相机(CAMERA)，用于拍摄照片后存储到系统相册中")
                         .setFileProviderAuthority("com.huantansheng.easyphotos.demo.fileprovider")
                         .complexSelector(false, 2, 3)
                         .start(new SelectCallback() {
@@ -257,6 +262,7 @@ public class SampleActivity extends AppCompatActivity
                 break;
             case R.id.album_complex_selector2:
                 EasyPhotos.createAlbum(this, false, false, GlideEngine.getInstance())
+                        .setCameraPermissionHint("相机(CAMERA)，用于拍摄照片后存储到系统相册中")
                         .setFileProviderAuthority("com.huantansheng.easyphotos.demo.fileprovider")
                         .complexSelector(true, 2, 3)
                         .start(new SelectCallback() {

@@ -8,8 +8,8 @@ android {
         minSdkVersion 23
         //noinspection OldTargetApi
         targetSdkVersion 33
-        versionCode 125
-        versionName "1.2.5"
+        versionCode 126
+        versionName "1.2.6"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -45,7 +45,7 @@ publishing {
         aarAndroid(MavenPublication) {
             groupId = 'com.github.lcyluo'
             artifactId = 'EasyPhotos'
-            version = '1.2.5'
+            version = '1.2.6'
             // 增加上传源码的 task
             artifact sourceJar
             // 必须有这个 否则不会上传AAR包
